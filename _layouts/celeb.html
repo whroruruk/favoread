@@ -4,42 +4,134 @@ layout: default
 {% assign current_celeb = page.title %}
 {% assign books = site.data.list | where: "이름", current_celeb %}
 
-<main class="max-w-5xl mx-auto px-4 py-12">
-  <!-- 시각적으로는 숨겨지지만 검색 로봇은 읽을 수 있는 키워드 블록입니다. -->
-  <div class="sr-only">
-    {{ current_celeb }} 독서, {{ current_celeb }} 인생책, 책 추천, 책
-  </div>
+<!-- 검색 로봇을 위한 숨김 키워드 -->
+<div class="sr-only">
+  {{ current_celeb }} 독서, {{ current_celeb }} 인생책, 책 추천, 책
+</div>
 
-  <div class="mb-10 flex items-center gap-6">
-    <a href="{{ '/' | relative_url }}" class="w-12 h-12 flex items-center justify-center bg-white border-4 border-ink shadow-neo hover:bg-neo-yellow font-sans font-black text-xl transition-all">
-      ◀
-    </a>
-    <h1 class="text-4xl md:text-5xl font-black tracking-tight text-ink">
-      <!-- 깔끔하게 이름만 출력합니다 -->
-      {{ current_celeb }}
-    </h1>
-  </div>
+<!-- 이전 디자인의 모달 배경과 레이아웃 -->
+<div class="fixed inset-0 bg-ink/75 z-50 flex items-center justify-center md:p-8 backdrop-blur-sm">
+  <div id="modal-inner" class="w-full max-w-5xl bg-paper border-4 border-ink shadow-neo-lg relative flex flex-col md:flex-row max-h-[88svh] overflow-hidden">
+    
+    <!-- 뒤로가기 버튼 (클릭 시 메인 홈으로 이동) -->
+    <a href="{{ '/' | relative_url }}" class="absolute top-2 right-2 z-50 w-9 h-9 flex items-center justify-center bg-neo-pink border-2 border-ink shadow-neo-sm text-ink font-sans font-black text-base hover:bg-neo-yellow active:shadow-none transition-all">✕</a>
 
-  <div class="grid md:grid-cols-2 gap-8">
-    {% for book in books %}
-    <article class="bg-white border-4 border-ink shadow-neo p-6 flex flex-col md:flex-row gap-6 items-start">
-      {% if book.도서이미지 != "" %}
-        <img src="{{ book.도서이미지 }}" alt="{{ book.도서명 }} 표지" class="w-32 object-cover border-2 border-ink shadow-neo-sm">
-      {% else %}
-        <div class="w-32 aspect-[2/3] border-2 border-ink bg-paper-dark flex items-center justify-center text-xs font-bold text-muted shadow-neo-sm">COVER</div>
-      {% endif %}
-      
-      <div class="flex-1">
-        <h2 class="text-2xl font-black mb-2">{{ book.도서명 }}</h2>
-        <p class="text-sm font-bold mb-4">{{ book.저자 }} <span class="opacity-40">|</span> {{ book.출판사 }}</p>
-        
-        {% if book.코멘트 != "" %}
-          <blockquote class="text-sm leading-relaxed bg-neo-yellow border-2 border-ink p-4 shadow-neo-sm mb-4 font-medium">
-            "{{ book.코멘트 }}"
-          </blockquote>
-        {% endif %}
+    <!-- 왼쪽 영역: 프로필 사진과 정보 -->
+    <div id="modal-left" class="w-full md:w-64 lg:w-72 flex-shrink-0 flex flex-col justify-center items-center bg-white border-b-4 md:border-b-0 md:border-r-4 border-ink p-6 md:p-10 gap-0">
+      <div id="modal-photo-wrap" class="w-40 h-52 md:w-44 md:h-56 overflow-hidden border-2 border-ink shadow-neo bg-paper-dark mb-6 relative" data-name="{{ current_celeb }}">
+        <div class="w-full h-full flex items-center justify-center font-sans font-bold text-xs text-muted">PHOTO</div>
       </div>
-    </article>
-    {% endfor %}
+
+      <div id="modal-meta" class="flex flex-col items-center mb-6 md:mb-10 w-full text-center">
+        <h2 id="modal-name" class="text-2xl md:text-3xl font-black tracking-tight mb-2 line-clamp-2 leading-snug">{{ current_celeb }}</h2>
+        <p id="modal-count" class="font-sans font-bold bg-neo-yellow border-2 border-ink px-3 py-1 text-xs tracking-widest uppercase">{{ books.size }} records</p>
+      </div>
+
+      <button id="share-btn" class="font-sans font-bold text-xs tracking-widest border-2 border-ink bg-white shadow-neo-sm px-5 py-2.5 hover:bg-neo-mint hover:-translate-y-0.5 hover:shadow-neo active:shadow-neo-sm transition-all">
+        SHARE LINK
+      </button>
+    </div>
+
+    <!-- 오른쪽 영역: 책 슬라이드 목록 -->
+    <div id="modal-right" class="flex flex-col flex-1 bg-[#fafaf8] min-w-0">
+      <div id="modal-archive-label" class="flex-shrink-0 font-sans font-bold text-[9px] md:text-xs tracking-widest text-ink border-b border-ink/10 px-5 md:px-10 pt-4 md:pt-7 pb-2">
+        READING ARCHIVE
+      </div>
+
+      <div id="swiper-viewport" class="mx-4 md:mx-8 mt-2 md:mt-4 overflow-hidden relative" style="height: 380px;">
+        <div id="swiper-track" class="h-full flex transition-transform duration-500 ease-in-out">
+          {% for book in books %}
+          <div class="w-full flex-shrink-0 flex flex-col md:flex-row gap-4 md:gap-8 items-center md:items-start px-4 py-4 md:px-6 h-full overflow-y-auto">
+            {% if book.도서이미지 != "" %}
+              <img src="{{ book.도서이미지 }}" class="w-24 md:w-36 lg:w-44 object-cover border-2 border-ink shadow-neo flex-shrink-0 mx-auto md:mx-0" alt="표지">
+            {% else %}
+              <div class="w-24 md:w-36 lg:w-44 aspect-[2/3] border-2 border-ink bg-white flex items-center justify-center font-sans font-bold text-xs text-muted shadow-neo flex-shrink-0 mx-auto md:mx-0">COVER</div>
+            {% endif %}
+            
+            <div class="flex flex-col w-full text-center md:text-left min-w-0">
+              <h4 class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black tracking-tight leading-snug mb-1.5 md:mb-2">{{ book.도서명 }}</h4>
+              <p class="text-xs md:text-sm font-bold mb-3">{{ book.저자 }} {% if book.출판사 != "" %}<span class="opacity-40 mx-1.5">|</span><span class="text-ink/70">{{ book.출판사 }}</span>{% endif %}</p>
+              
+              {% if book.코멘트 != "" %}
+              <blockquote class="text-xs md:text-sm leading-relaxed text-ink mb-3 bg-neo-yellow border-2 border-ink p-3 md:p-4 shadow-neo-sm font-medium">"{{ book.코멘트 }}"</blockquote>
+              {% endif %}
+              
+              <div class="flex gap-4 flex-wrap justify-center md:justify-start mt-2">
+                {% if book.출처 contains "http" %}
+                  <a href="{{ book.출처 }}" target="_blank" class="book-link">↗ 출처</a>
+                {% endif %}
+                {% if book.링크 != "" and book.링크 != "#" %}
+                  <a href="{{ book.링크 }}" target="_blank" class="book-link">↗ 도서 정보</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div id="modal-nav-bar" class="flex-shrink-0 flex justify-between items-center border-t border-ink/10 px-5 md:px-8 py-3 md:py-4">
+        <button id="prev-btn" class="font-sans font-bold text-[9px] md:text-xs tracking-widest border-2 border-ink bg-white shadow-neo-sm px-3 py-1.5 md:px-4 md:py-2 hover:bg-neo-yellow disabled:opacity-30 transition-all">◀ PREV</button>
+        <div id="page-indicator" class="font-sans font-bold text-[10px] md:text-xs bg-white border-2 border-ink px-3 md:px-4 py-1.5 md:py-2 text-ink shadow-neo-sm tracking-widest">1 / {{ books.size }}</div>
+        <button id="next-btn" class="font-sans font-bold text-[9px] md:text-xs tracking-widest border-2 border-ink bg-white shadow-neo-sm px-3 py-1.5 md:px-4 md:py-2 hover:bg-neo-yellow disabled:opacity-30 transition-all">NEXT ▶</button>
+      </div>
+    </div>
   </div>
-</main>
+</div>
+
+<div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-ink text-neo-yellow font-sans font-bold border-2 border-ink px-6 py-3 text-xs tracking-widest opacity-0 translate-y-4 shadow-neo transition-all duration-300 z-[100] pointer-events-none w-max max-w-[90vw]">
+  LINK COPIED TO CLIPBOARD.
+</div>
+
+<script>
+  // 위키백과 인물 사진 로딩
+  async function loadWikiImage() {
+    const wrap = document.getElementById('modal-photo-wrap');
+    const name = wrap.dataset.name;
+    try {
+      const u = `https://ko.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(name)}&gsrlimit=1&prop=pageimages&pithumbsize=500&format=json&origin=*`;
+      const r = await fetch(u);
+      const d = await r.json();
+      const pages = Object.values(d?.query?.pages || {});
+      if (pages[0]?.thumbnail?.source) {
+        wrap.innerHTML = `<img src="${pages[0].thumbnail.source}" class="w-full h-full object-cover" alt="${name}">`;
+      }
+    } catch (e) {}
+  }
+
+  // 슬라이더 좌우 넘기기 기능
+  let currentIdx = 0;
+  const totalBooks = {{ books.size }};
+  const track = document.getElementById('swiper-track');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const indicator = document.getElementById('page-indicator');
+
+  function updateSlide() {
+    track.style.transform = `translateX(-${currentIdx * 100}%)`;
+    if(prevBtn) prevBtn.disabled = currentIdx === 0;
+    if(nextBtn) nextBtn.disabled = currentIdx === totalBooks - 1;
+    if(indicator) indicator.textContent = `${currentIdx + 1} / ${totalBooks}`;
+  }
+
+  if(totalBooks > 0 && prevBtn && nextBtn) {
+    prevBtn.addEventListener('click', () => { if (currentIdx > 0) { currentIdx--; updateSlide(); } });
+    nextBtn.addEventListener('click', () => { if (currentIdx < totalBooks - 1) { currentIdx++; updateSlide(); } });
+    updateSlide();
+  }
+
+  // 링크 복사 기능
+  const shareBtn = document.getElementById('share-btn');
+  if(shareBtn) {
+    shareBtn.addEventListener('click', () => {
+      const url = window.location.href;
+      navigator.clipboard.writeText(url).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.remove('opacity-0', 'translate-y-4');
+        setTimeout(() => toast.classList.add('opacity-0', 'translate-y-4'), 3000);
+      });
+    });
+  }
+
+  window.addEventListener('DOMContentLoaded', loadWikiImage);
+</script>
