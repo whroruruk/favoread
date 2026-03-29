@@ -1,24 +1,47 @@
 ---
 layout: default
-title: 최애의 독서
 ---
 <main class="max-w-5xl mx-auto px-4 py-12 md:py-24">
   <header class="flex flex-col items-center mb-16 md:mb-20">
     <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight mb-3 text-ink text-center">최애의 독서</h1>
     <p class="text-ink font-sans font-bold text-sm sm:text-base tracking-wide mb-6">당신이 좋아하는, 그들이 읽은 책📕</p>
+    <div class="flex items-center gap-2 text-[10px] font-sans font-bold tracking-wider text-ink border-2 border-ink bg-white px-3 py-1.5 shadow-neo-sm">
+      <span class="w-2 h-2 rounded-full bg-green-400"></span>
+      <span>{{ site.celebs.size }} RECORDS</span>
+    </div>
   </header>
 
   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-12">
     {% for celeb in site.celebs %}
-    <a href="{{ celeb.url | relative_url }}" class="group flex flex-col bg-white border-2 border-ink shadow-neo hover:shadow-neo-lg hover:-translate-y-1 transition-all">
-      <div class="w-full aspect-[3/4] overflow-hidden border-b-2 border-ink bg-paper-dark">
-        <!-- 위키 이미지를 불러오는 자바스크립트는 기존 방식을 활용할 수 있습니다 -->
-        <div class="w-full h-full flex items-center justify-center font-sans font-bold text-xs text-muted">PHOTO</div>
+    <a href="{{ celeb.url | relative_url }}" class="celeb-card group flex flex-col bg-white border-2 border-ink shadow-neo hover:shadow-neo-lg hover:-translate-y-1 transition-all" data-name="{{ celeb.title }}">
+      <div class="celeb-photo-wrap w-full aspect-[3/4] overflow-hidden border-b-2 border-ink bg-paper-dark relative">
+        <div class="w-full h-full flex items-center justify-center font-sans font-bold text-[10px] tracking-widest text-muted">PHOTO</div>
       </div>
       <div class="p-4 flex flex-col items-center group-hover:bg-neo-mint transition-colors">
-        <h3 class="text-xl font-bold tracking-tight mb-2 text-ink line-clamp-1">{{ celeb.title }}</h3>
+        <h3 class="text-xl font-bold tracking-tight text-ink line-clamp-1 text-center">{{ celeb.title }}</h3>
       </div>
     </a>
     {% endfor %}
   </div>
 </main>
+
+<script>
+  // 위키백과 사진 자동 로딩 스크립트
+  async function loadWikiImages() {
+    const cards = document.querySelectorAll('.celeb-card');
+    for (const card of cards) {
+      const name = card.dataset.name;
+      try {
+        const u = `https://ko.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(name)}&gsrlimit=1&prop=pageimages&pithumbsize=500&format=json&origin=*`;
+        const r = await fetch(u);
+        const d = await r.json();
+        const pages = Object.values(d?.query?.pages || {});
+        if (pages[0]?.thumbnail?.source) {
+          const wrap = card.querySelector('.celeb-photo-wrap');
+          wrap.innerHTML = `<img src="${pages[0].thumbnail.source}" class="celeb-portrait w-full h-full object-cover">`;
+        }
+      } catch (e) {}
+    }
+  }
+  window.addEventListener('DOMContentLoaded', loadWikiImages);
+</script>
