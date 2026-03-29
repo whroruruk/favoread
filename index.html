@@ -6,7 +6,7 @@
   <title>최애의 독서 | Archive</title>
   <meta name="google-site-verification" content="RGTC9c8GtMgvT1HtDz5vzgXPGl9f-DSDOq1lCW95In8" />
   <meta name="description" content="아이돌, 셀럽, 그리고 나의 최애가 읽은 책들을 한곳에 모았습니다.">
-  <meta name="keywords" content="아이돌, 셀럽, 최애, 독서, 책, 읽는, 책 추천, 인생책, 읽은 책책">
+  <meta name="keywords" content="아이돌, 셀럽, 최애, 독서, 책, 읽는, 책 추천, 인생책, 읽은 책">
   
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;400;600;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
@@ -95,31 +95,32 @@
       #modal-left {
         width: 100% !important;
         flex-direction: row !important;
-        align-items: center !important;
+        align-items: flex-start !important;
         justify-content: flex-start !important;
         border-bottom: 2px solid #000 !important;
         border-right: none !important;
-        padding: 10px 48px 10px 14px !important;
-        gap: 10px !important;
+        padding: 16px !important;
+        gap: 14px !important;
       }
       #modal-photo-wrap {
-        width: 44px !important;
-        height: 56px !important;
+        width: 56px !important;
+        height: 76px !important;
         flex-shrink: 0;
         border: 1.5px solid #000;
-        overflow: hidden;
+        margin-bottom: 0 !important;
       }
       #modal-meta {
         flex: 1;
         min-width: 0;
-        flex-direction: row !important;
-        align-items: center !important;
-        gap: 8px !important;
-        padding-right: 0 !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        text-align: left !important;
+        gap: 6px !important;
+        margin-bottom: 0 !important;
       }
-      #modal-name  { font-size: 15px !important; }
-      #modal-count { font-size: 8px !important; white-space: nowrap; }
-      #share-btn   { font-size: 11px !important; padding: 5px 10px !important; margin: 0 !important; }
+      #modal-name  { font-size: 18px !important; line-height: 1.3 !important; }
+      #modal-count { font-size: 9px !important; padding: 2px 6px !important; }
+      #share-btn   { font-size: 9px !important; padding: 2px 8px !important; }
 
       #modal-right {
         width: 100% !important;
@@ -162,54 +163,56 @@
 
 <body class="font-serif relative selection:bg-neo-yellow selection:text-ink">
 
-<div class="fixed right-6 bottom-6 md:right-10 md:bottom-10 z-[60] flex flex-col items-end">
-  <div id="faq-window" class="hidden bg-paper border-4 border-ink shadow-neo-lg w-80 mb-4 flex flex-col transition-all">
-    <div class="flex justify-between items-center border-b-4 border-ink p-3 bg-neo-mint">
-      <h3 class="font-sans font-black text-lg tracking-widest text-ink">FAQ</h3>
-      <button onclick="document.getElementById('faq-window').classList.toggle('hidden')" class="text-ink font-black text-xl hover:text-white transition-colors">✕</button>
-    </div>
-    
-    <div class="p-5 font-serif text-sm text-ink space-y-6 max-h-[60vh] overflow-y-auto">
-      <div>
-        <h4 class="font-bold bg-neo-yellow inline-block px-2 py-1 mb-2 shadow-neo-sm border-2 border-ink">Q. 최애의 책, 어떤 기준으로 올라오나요?</h4>
-        <p class="leading-relaxed text-muted mt-1 font-sans font-bold text-sm">A. 미디어나 SNS 등에서 언급했던 책, 혹은 손에 들고 있던 책 등등 기준은 없습니다!</p>
-      </div>
+<!-- 상단 메뉴 버튼들 (스크롤에 따라오지 않고 상단에 고정) -->
+<div id="floating-menus" class="absolute top-4 right-4 md:top-8 md:right-8 z-[40] flex flex-col items-end gap-4 transition-opacity duration-300">
+  
+  <a href="https://hwiruruk.github.io/readinglab/" 
+     title="Reading Lab 메인으로 돌아가기"
+     class="block w-[50px] h-[50px] md:w-[60px] md:h-[60px] transition-transform hover:-translate-y-0.5 hover:-translate-x-0.5 hover:scale-105 active:scale-95">
+      <svg viewBox="0 0 100 100" style="width: 100%; height: 100%; filter: drop-shadow(4px 4px 0px rgba(0,0,0,1));">
+          <rect x="10" y="60" width="70" height="25" fill="#FFFFFF" stroke="black" stroke-width="4" />
+          <rect x="15" y="38" width="75" height="22" fill="#93B6CC" stroke="black" stroke-width="4" />
+          <rect x="25" y="15" width="60" height="23" fill="#903B31" stroke="black" stroke-width="4" />
+          <line x1="10" y1="72" x2="80" y2="72" stroke="black" stroke-width="3" />
+          <line x1="15" y1="49" x2="90" y2="49" stroke="black" stroke-width="3" />
+      </svg>
+  </a>
 
-      <div class="mt-4">
-        <h4 class="font-bold bg-neo-pink inline-block px-2 py-1 mb-2 shadow-neo-sm border-2 border-ink">Q. 제가 아는 최애의 책을 제보해도 되나요?</h4>
-        <p class="leading-relaxed text-muted mt-1 font-sans font-bold text-sm">A. 제보는 환영입니다! 대신 정확한 기록을 위해 출처가 꼭 필요해요. <a href="https://forms.gle/Sd3ZQTahZNbUjbdz7" target="_blank" class="underline decoration-2 hover:text-neo-pink">(링크)</a> 이쪽으로 제보해주시면, 제가 시간이 날 때마다 틈틈이 확인해서 업데이트해 둘게요.</p>
+  <div class="relative flex flex-col items-end">
+    <div id="faq-window" class="hidden bg-paper border-4 border-ink shadow-neo-lg w-80 mb-4 flex-col transition-all absolute top-[60px] right-0 md:top-[70px]">
+      <div class="flex justify-between items-center border-b-4 border-ink p-3 bg-neo-mint">
+        <h3 class="font-sans font-black text-lg tracking-widest text-ink">FAQ</h3>
+        <button onclick="document.getElementById('faq-window').classList.toggle('hidden')" class="text-ink font-black text-xl hover:text-white transition-colors">✕</button>
       </div>
+      
+      <div class="p-5 font-serif text-sm text-ink space-y-6 max-h-[60vh] overflow-y-auto">
+        <div>
+          <h4 class="font-bold bg-neo-yellow inline-block px-2 py-1 mb-2 shadow-neo-sm border-2 border-ink">Q. 최애의 책, 어떤 기준으로 올라오나요?</h4>
+          <p class="leading-relaxed text-muted mt-1 font-sans font-bold text-sm">A. 미디어나 SNS 등에서 언급했던 책, 혹은 손에 들고 있던 책 등등 기준은 없습니다!</p>
+        </div>
 
-      <div class="mt-6 p-4 bg-white border-2 border-ink border-dashed">
-        <h4 class="font-bold text-ink mb-1">📌 당부드리는 점</h4>
-        <p class="leading-relaxed text-muted mt-1 font-sans font-bold text-xs">대부분 출처를 확인하고 올리지만, 가끔 부정확할 때도 있어요. 도서 정보도 출판사에 따라 판본이 정말 다양한 경우도 있으니 너른 마음으로 이해해 주시길 부탁드릴게요～</p>
+        <div class="mt-4">
+          <h4 class="font-bold bg-neo-pink inline-block px-2 py-1 mb-2 shadow-neo-sm border-2 border-ink">Q. 제가 아는 최애의 책을 제보해도 되나요?</h4>
+          <p class="leading-relaxed text-muted mt-1 font-sans font-bold text-sm">A. 제보는 환영입니다! 대신 정확한 기록을 위해 출처가 꼭 필요해요. <a href="https://forms.gle/Sd3ZQTahZNbUjbdz7" target="_blank" class="underline decoration-2 hover:text-neo-pink">(링크)</a> 이쪽으로 제보해주시면, 제가 시간이 날 때마다 틈틈이 확인해서 업데이트해 둘게요.</p>
+        </div>
+
+        <div class="mt-6 p-4 bg-white border-2 border-ink border-dashed">
+          <h4 class="font-bold text-ink mb-1">📌 당부드리는 점</h4>
+          <p class="leading-relaxed text-muted mt-1 font-sans font-bold text-xs">대부분 출처를 확인하고 올리지만, 가끔 부정확할 때도 있어요. 도서 정보도 출판사에 따라 판본이 정말 다양한 경우도 있으니 너른 마음으로 이해해 주시길 부탁드릴게요～</p>
+        </div>
       </div>
     </div>
+
+    <button onclick="document.getElementById('faq-window').classList.toggle('hidden')" 
+            class="w-12 h-12 md:w-14 md:h-14 bg-neo-yellow border-4 border-ink shadow-neo hover:bg-neo-pink hover:-translate-y-1 active:shadow-none transition-all rounded-full flex items-center justify-center font-sans font-black text-ink text-xl md:text-2xl">
+      ?
+    </button>
   </div>
-
-  <button onclick="document.getElementById('faq-window').classList.toggle('hidden')" 
-          class="w-14 h-14 bg-neo-yellow border-4 border-ink shadow-neo hover:bg-neo-pink hover:-translate-y-1 active:shadow-none transition-all rounded-full flex items-center justify-center font-sans font-black text-ink text-2xl">
-    ?
-  </button>
 </div>  
 
-<a href="https://hwiruruk.github.io/readinglab/" 
-   title="Reading Lab 메인으로 돌아가기"
-   style="position: fixed; top: 20px; right: 20px; width: 60px; height: 60px; z-index: 9999; cursor: pointer; transition: transform 0.2s;"
-   onmouseover="this.style.transform='translate(-2px, -2px) scale(1.05)'"
-   onmouseout="this.style.transform='translate(0, 0) scale(1)'">
-    <svg viewBox="0 0 100 100" style="width: 100%; height: 100%; filter: drop-shadow(4px 4px 0px rgba(0,0,0,1));">
-        <rect x="10" y="60" width="70" height="25" fill="#FFFFFF" stroke="black" stroke-width="4" />
-        <rect x="15" y="38" width="75" height="22" fill="#93B6CC" stroke="black" stroke-width="4" />
-        <rect x="25" y="15" width="60" height="23" fill="#903B31" stroke="black" stroke-width="4" />
-        <line x1="10" y1="72" x2="80" y2="72" stroke="black" stroke-width="3" />
-        <line x1="15" y1="49" x2="90" y2="49" stroke="black" stroke-width="3" />
-    </svg>
-</a>
-  
 <main id="app-root" class="max-w-5xl mx-auto px-4 sm:px-6 py-12 md:py-24">
 
-  <header class="flex flex-col items-center mb-16 md:mb-20 opacity-0 animate-fade-in">
+  <header class="flex flex-col items-center mb-16 md:mb-20 opacity-0 animate-fade-in pt-10 md:pt-0">
     <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight mb-3 text-ink text-center">최애의 독서</h1>
     <p class="text-ink font-sans font-bold text-sm sm:text-base tracking-wide mb-6 text-center">당신이 좋아하는, 그들이 읽은 책📕</p>
     
@@ -245,15 +248,17 @@
         <img id="modal-image" src="" class="w-full h-full object-cover" alt="">
       </div>
 
-      <div id="modal-meta" class="flex flex-col items-center mb-6 md:mb-10 w-full text-center">
-        <h2 id="modal-name" class="text-2xl md:text-3xl font-black tracking-tight mb-2 line-clamp-2 leading-snug"></h2>
-        <p  id="modal-count" class="font-sans font-bold bg-neo-yellow border-2 border-ink px-3 py-1 text-xs tracking-widest uppercase"></p>
+      <div id="modal-meta" class="flex flex-col items-center mb-6 w-full text-center">
+        <h2 id="modal-name" class="text-2xl md:text-3xl font-black tracking-tight mb-3 line-clamp-2 leading-snug"></h2>
+        
+        <div class="flex gap-2 justify-center items-stretch h-7 md:h-8">
+          <p id="modal-count" class="font-sans font-bold bg-neo-yellow border-2 border-ink px-3 text-xs tracking-widest uppercase flex items-center justify-center m-0 leading-none shadow-neo-sm"></p>
+          <button id="share-btn"
+            class="font-sans font-bold text-xs tracking-widest border-2 border-ink bg-white shadow-neo-sm px-4 hover:bg-neo-mint hover:-translate-y-0.5 hover:shadow-neo active:shadow-neo-sm transition-all flex items-center justify-center m-0 leading-none">
+            공유하기
+          </button>
+        </div>
       </div>
-
-      <button id="share-btn"
-        class="font-sans font-bold text-xs tracking-widest border-2 border-ink bg-white shadow-neo-sm px-5 py-2.5 hover:bg-neo-mint hover:-translate-y-0.5 hover:shadow-neo active:shadow-neo-sm transition-all">
-        SHARE LINK
-      </button>
     </div>
 
     <div id="modal-right" class="flex flex-col flex-1 bg-[#fafaf8] min-w-0">
@@ -281,7 +286,7 @@
 
 <div id="toast"
   class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-ink text-neo-yellow font-sans font-bold border-2 border-ink px-6 py-3 text-xs tracking-widest opacity-0 translate-y-4 shadow-neo transition-all duration-300 z-[100] pointer-events-none w-max max-w-[90vw]">
-  LINK COPIED TO CLIPBOARD.
+  링크가 복사되었습니다.
 </div>
 
 <script>
@@ -291,7 +296,7 @@
   /* ── CONFIG ─────────────────────────────────────────────── */
   const SHEET_URL = 'data.csv'; 
   const WIKI_API  = 'https://ko.wikipedia.org/w/api.php';
-  const BASE_PATH = window.location.pathname; // URL 조작을 위해 추가
+  const BASE_PATH = window.location.pathname;
   const SITE_URL  = (() => {
     try { if (document.referrer?.includes('sites.google.com')) return document.referrer.split('?')[0]; } catch {}
     return location.origin + BASE_PATH;
@@ -325,14 +330,24 @@
     nextBtn:    document.getElementById('next-btn'),
     dots:       document.getElementById('dots-container'),
     toast:      document.getElementById('toast'),
+    floatMenus: document.getElementById('floating-menus'),
   };
 
   /* ── UTILS ──────────────────────────────────────────────── */
-  function getJosaForTitle(name) {
-    if (!name) return '';
-    const lastChar = name.charCodeAt(name.length - 1);
-    if (lastChar < 0xAC00 || lastChar > 0xD7A3) {
-      return name + '의 책';
+  function updateSEO(name) {
+    const defaultTitle = '최애의 독서 | Archive';
+    const defaultDesc = '아이돌, 셀럽, 그리고 나의 최애가 읽은 책들을 한곳에 모았습니다.';
+    
+    if (name) {
+      document.title = `${name} 책 추천 | 최애의 독서 Archive`;
+      const descMeta = document.querySelector('meta[name="description"]');
+      if (descMeta) {
+        descMeta.setAttribute('content', `${name}님이 읽은 책, 추천 도서 리스트를 모아보세요. 최애의 독서 아카이브입니다.`);
+      }
+    } else {
+      document.title = defaultTitle;
+      const descMeta = document.querySelector('meta[name="description"]');
+      if (descMeta) descMeta.setAttribute('content', defaultDesc);
     }
   }
 
@@ -431,7 +446,7 @@
         celebMap[name].imageUrl = url;
         const wrap = card.querySelector('.celeb-photo-wrap');
         if (wrap) {
-          wrap.innerHTML = `<img src="${url}" alt="${name}" loading="lazy" class="celeb-portrait w-full h-full object-cover opacity-0 transition-opacity duration-500">`;
+          wrap.innerHTML = `<img src="${url}" alt="${name} 책 추천" loading="lazy" class="celeb-portrait w-full h-full object-cover opacity-0 transition-opacity duration-500">`;
           setTimeout(() => wrap.querySelector('img')?.classList.remove('opacity-0'), 50);
         }
       }
@@ -456,12 +471,14 @@
     const slice = filteredEntries.slice(renderIndex, renderIndex + CHUNK_SIZE);
     
     slice.forEach(([name, data]) => {
-      const card = document.createElement('article');
-      card.className = 'group cursor-pointer flex flex-col bg-white border-2 border-ink shadow-neo hover:shadow-neo-lg hover:-translate-y-1 transition-all duration-200 opacity-0 animate-fade-in-fast';
+      const card = document.createElement('a');
+      const celebUrl = `${BASE_PATH}?celeb=${encodeURIComponent(name)}`;
+      card.href = celebUrl;
+      card.className = 'group cursor-pointer flex flex-col bg-white border-2 border-ink shadow-neo hover:shadow-neo-lg hover:-translate-y-1 transition-all duration-200 opacity-0 animate-fade-in-fast block';
       card.dataset.name = name;
 
       const img = data.imageUrl
-        ? `<img src="${data.imageUrl}" alt="${name}" loading="lazy" class="celeb-portrait w-full h-full object-cover">`
+        ? `<img src="${data.imageUrl}" alt="${name} 책 추천" loading="lazy" class="celeb-portrait w-full h-full object-cover">`
         : `<div class="w-full h-full bg-paper-dark flex items-center justify-center font-sans font-bold text-[10px] tracking-widest text-muted">PHOTO</div>`;
       
       card.innerHTML = `
@@ -471,11 +488,12 @@
           <p class="text-[8px] sm:text-[10px] tracking-widest text-ink uppercase font-sans font-bold bg-white border border-ink px-1.5 sm:px-2 py-0.5">${data.books.length} records</p>
         </div>`;
       
-      card.addEventListener('click', () => {
+      card.addEventListener('click', (e) => {
+        if (e.ctrlKey || e.metaKey || e.shiftKey) return;
+        
+        e.preventDefault(); 
         openModal(name);
-        // 브라우저 주소창에 파라미터 추가 (SEO 및 공유용)
-        const newUrl = `${BASE_PATH}?celeb=${encodeURIComponent(name)}`;
-        history.pushState({ celeb: name }, '', newUrl);
+        history.pushState({ celeb: name }, '', celebUrl);
       });
       
       if (!data.imageUrl) imgObserver.observe(card);
@@ -488,7 +506,6 @@
     }
   }
 
-  // isHistoryNav 매번 뒤로가기를 할 때 state를 다시 푸시하지 않도록 막는 플래그
   function openModal(name, isHistoryNav = false) {
     if (!celebMap[name]) return;
     const data = celebMap[name];
@@ -497,25 +514,30 @@
     D.mImg.src = data.imageUrl || '';
     D.mImg.parentElement.style.display = data.imageUrl ? '' : 'none';
     
-    D.mName.textContent  = getJosaForTitle(name);
+    D.mName.textContent  = name; 
     D.mCount.textContent = `${data.books.length} records`;
 
     buildSlides();
     D.overlay.classList.add('active');
+    D.floatMenus.classList.add('opacity-0', 'pointer-events-none'); 
     document.body.style.overflow = 'hidden';
+    
+    updateSEO(name); 
   }
 
   function closeModal(isHistoryNav = false) {
     modal.open = false;
     D.overlay.classList.remove('active');
+    D.floatMenus.classList.remove('opacity-0', 'pointer-events-none'); 
     document.body.style.overflow = '';
     
     if (!isHistoryNav) {
-      // 주소창 파라미터 제거하여 메인 주소로 복귀
       history.pushState(null, '', BASE_PATH);
     }
 
     setTimeout(() => { D.track.innerHTML = ''; D.dots.innerHTML = ''; }, 300);
+    
+    updateSEO(null); 
   }
 
   function buildSlides() {
@@ -584,7 +606,6 @@
       filterEntries(); 
       setStatus('success', `${entries.length} RECORDS`);
 
-      // 초기 로드 시 파라미터 확인 후 해당 인물 모달 자동 열기
       const urlParams = new URLSearchParams(window.location.search);
       const targetCeleb = urlParams.get('celeb');
       if (targetCeleb && celebMap[targetCeleb]) {
@@ -601,7 +622,6 @@
     D.overlay.addEventListener('click', e => { if (e.target === D.overlay) closeModal(false); });
     
     D.shareBtn.addEventListener('click', () => {
-      // 현재 열려있는 모달의 인물을 포함한 고유 URL 생성
       const shareUrl = `${window.location.origin}${BASE_PATH}?celeb=${encodeURIComponent(modal.name)}`;
       try {
         const ta = document.createElement('textarea');
@@ -625,7 +645,6 @@
       if (e.key === 'ArrowRight') goSlide(modal.idx + 1);
     });
 
-    // 브라우저 뒤로가기/앞으로가기 버튼 연동
     window.addEventListener('popstate', (e) => {
       if (e.state && e.state.celeb) {
         openModal(e.state.celeb, true);
