@@ -99,7 +99,8 @@
         justify-content: flex-start !important;
         border-bottom: 2px solid #000 !important;
         border-right: none !important;
-        padding: 10px 14px !important;
+        /* SHARE LINK 버튼과 X(닫기) 버튼이 겹치지 않도록 오른쪽 패딩을 48px로 넓힘 */
+        padding: 10px 48px 10px 14px !important;
         gap: 10px !important;
       }
       #modal-photo-wrap {
@@ -160,6 +161,8 @@
   </style>
 </head>
 
+<body class="font-serif relative selection:bg-neo-yellow selection:text-ink">
+
 <div class="fixed right-6 bottom-6 md:right-10 md:bottom-10 z-[60] flex flex-col items-end">
   <div id="faq-window" class="hidden bg-paper border-4 border-ink shadow-neo-lg w-80 mb-4 flex flex-col transition-all">
     <div class="flex justify-between items-center border-b-4 border-ink p-3 bg-neo-mint">
@@ -194,8 +197,6 @@
     ?
   </button>
 </div>  
-
-<body class="font-serif relative selection:bg-neo-yellow selection:text-ink">
 
 <a href="https://hwiruruk.github.io/readinglab/" 
    title="Reading Lab 메인으로 돌아가기"
@@ -250,6 +251,7 @@
       </div>
 
       <div id="modal-meta" class="flex flex-col items-center mb-6 md:mb-10 w-full text-center">
+        <!-- SEO를 위해 이름이 포함된 제목이 여기에 들어갑니다. -->
         <h2 id="modal-name" class="text-2xl md:text-3xl font-black tracking-tight mb-2 line-clamp-2 leading-snug"></h2>
         <p  id="modal-count" class="font-sans font-bold bg-neo-yellow border-2 border-ink px-3 py-1 text-xs tracking-widest uppercase"></p>
       </div>
@@ -275,7 +277,8 @@
         class="flex-shrink-0 flex justify-between items-center border-t border-ink/10 px-5 md:px-8 py-3 md:py-4">
         <button id="prev-btn"
           class="font-sans font-bold text-[9px] md:text-xs tracking-widest border-2 border-ink bg-white shadow-neo-sm px-3 py-1.5 md:px-4 md:py-2 hover:bg-neo-yellow disabled:opacity-30 transition-all">◀ PREV</button>
-        <div id="dots-container" class="flex gap-1.5 flex-wrap justify-center" style="max-width:50%"></div>
+        <!-- 여러 개의 네모 점을 네모 하나(진행률 박스)로 변경했습니다 -->
+        <div id="dots-container" class="flex items-center justify-center"></div>
         <button id="next-btn"
           class="font-sans font-bold text-[9px] md:text-xs tracking-widest border-2 border-ink bg-white shadow-neo-sm px-3 py-1.5 md:px-4 md:py-2 hover:bg-neo-yellow disabled:opacity-30 transition-all">NEXT ▶</button>
       </div>
@@ -329,6 +332,20 @@
     dots:       document.getElementById('dots-container'),
     toast:      document.getElementById('toast'),
   };
+
+  /* ── UTILS ──────────────────────────────────────────────── */
+  // 한글 받침 유무를 판별하여 알맞은 조사(이/가)를 붙여 반환하는 함수
+  function getJosaForTitle(name) {
+    if (!name) return '';
+    const lastChar = name.charCodeAt(name.length - 1);
+    // 한글(가~힣) 범위가 아니면 기본적으로 '~의 책' 사용
+    if (lastChar < 0xAC00 || lastChar > 0xD7A3) {
+      return name + '의 책';
+    }
+    // 종성(받침) 유무 확인
+    const hasJongseong = (lastChar - 0xAC00) % 28 > 0;
+    return name + (hasJongseong ? '이 읽은 책' : '가 읽은 책');
+  }
 
   /* ── STATUS ─────────────────────────────────────────────── */
   function setStatus(type, msg) {
@@ -439,7 +456,7 @@
     const q = kw.toLowerCase();
     filteredEntries = entries.filter(([name, data]) => {
       if (!q) return true;
-      const str = `${name} ${data.books.map(b => b.title).join(' ')}`.toLowerCase();
+      const str = `${name} ${data.books.map(b => b.title).join(' ')}.toLowerCase()`;
       return str.includes(q);
     });
     
@@ -487,7 +504,9 @@
 
     D.mImg.src = data.imageUrl || '';
     D.mImg.parentElement.style.display = data.imageUrl ? '' : 'none';
-    D.mName.textContent  = name;
+    
+    // SEO 최적화 및 자연스러운 조사가 반영된 제목 설정
+    D.mName.textContent  = getJosaForTitle(name);
     D.mCount.textContent = `${data.books.length} records`;
 
     buildSlides();
@@ -504,7 +523,9 @@
 
   function buildSlides() {
     D.track.innerHTML = '';
-    D.dots.innerHTML  = '';
+    // 여러 개의 점 대신 단일 페이지네이션 텍스트 박스로 생성
+    D.dots.innerHTML  = '<div id="page-indicator" class="font-sans font-bold text-[10px] md:text-xs bg-white border-2 border-ink px-3 md:px-4 py-1.5 md:py-2 text-ink shadow-neo-sm tracking-widest"></div>';
+    
     modal.books.forEach((book, i) => {
       const slide = document.createElement('div');
       slide.className = 'slide-area w-full flex-shrink-0 flex flex-col md:flex-row gap-4 md:gap-8 items-center md:items-start px-4 py-4 md:px-6';
@@ -536,11 +557,6 @@
         </div>`;
 
       D.track.appendChild(slide);
-
-      const dot = document.createElement('button');
-      dot.className = `w-1.5 h-1.5 rounded-none border border-ink transition-all ${i === 0 ? 'bg-ink scale-125' : 'bg-white hover:bg-neo-pink'}`;
-      dot.addEventListener('click', () => goSlide(i));
-      D.dots.appendChild(dot);
     });
     updateSlide();
   }
@@ -554,9 +570,12 @@
     D.track.style.transform = `translateX(-${modal.idx * 100}%)`;
     D.prevBtn.disabled = modal.idx === 0;
     D.nextBtn.disabled = modal.idx === modal.books.length - 1;
-    Array.from(D.dots.children).forEach((d, i) => {
-      d.className = `w-1.5 h-1.5 rounded-none border border-ink transition-all ${i === modal.idx ? 'bg-ink scale-125 shadow-neo-sm' : 'bg-white hover:bg-neo-pink'}`;
-    });
+    
+    // 현재 표시중인 책의 번호를 단일 네모 상자에 반영합니다.
+    const indicator = document.getElementById('page-indicator');
+    if (indicator) {
+      indicator.textContent = `${modal.idx + 1} / ${modal.books.length}`;
+    }
   }
 
   async function init() {
