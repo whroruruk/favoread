@@ -1,0 +1,72 @@
+name: Update Sitemap
+
+on:
+  push:
+    paths:
+      - 'data.csv'   # data.csv가 바뀔 때만 실행
+
+jobs:
+  sitemap:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate sitemap.xml
+        run: |
+          python3 - <<'EOF'
+          import csv, datetime
+          from urllib.parse import quote
+
+          BASE = "https://hwiruruk.github.io/favoread/"
+          TODAY = datetime.date.today().isoformat()
+
+          names = set()
+          with open("data.csv", encoding="utf-8") as f:
+              reader = csv.reader(f)
+              next(reader)  # 헤더 건너뜀
+              for row in reader:
+                  if row and row[0].strip():
+                      names.add(row[0].strip())
+
+          lines = [
+              '<?xml version="1.0" encoding="UTF-8"?>',
+              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+              '  <url>',
+              '    <loc>https://hwiruruk.github.io/readinglab/</loc>',
+              f'    <lastmod>{TODAY}</lastmod>',
+              '    <priority>0.8</priority>',
+              '  </url>',
+              '  <url>',
+              f'    <loc>{BASE}</loc>',
+              f'    <lastmod>{TODAY}</lastmod>',
+              '    <priority>1.0</priority>',
+              '  </url>',
+          ]
+
+          for name in sorted(names):
+              lines += [
+                  '  <url>',
+                  f'    <loc>{BASE}?celeb={quote(name)}</loc>',
+                  f'    <lastmod>{TODAY}</lastmod>',
+                  '    <priority>0.7</priority>',
+                  '  </url>',
+              ]
+
+          lines.append('</urlset>')
+
+          with open("sitemap.xml", "w", encoding="utf-8") as f:
+              f.write('\n'.join(lines))
+
+          print(f"✅ sitemap.xml 생성 완료: 총 {len(names)}명")
+          EOF
+
+      - name: Commit & push sitemap
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add sitemap.xml
+          git diff --cached --quiet || git commit -m "chore: sitemap 자동 갱신 ($(date '+%Y-%m-%d'))"
+          git push
