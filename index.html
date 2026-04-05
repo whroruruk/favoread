@@ -14,7 +14,7 @@
   <!-- 검색 결과 및 링크 공유 시 보여질 정보 명시 (Open Graph) -->
   <meta property="og:site_name" content="최애의 독서">
   <meta property="og:title" content="최애의 독서 | 당신이 좋아하는, 그들이 읽은 책">
-  <meta property="og:description" content="아이돌, 셀럽, 그리고 나의 최애가 읽은 책들을 한곳에 모았습니다.">
+  <meta property="og:description" content="아이돌, 셀럽, 연예인, 배우, 나의 최애가 읽은 책들을 한곳에 모은 최애의 독서">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://hwiruruk.github.io/favoread/">
   <meta property="og:image" content="https://hwiruruk.github.io/favoread/favicon.png">
@@ -411,7 +411,7 @@
     const defaultDesc  = '아이돌, 셀럽, 그리고 나의 최애가 읽은 책들을 한곳에 모았습니다.';
     const BASE = 'https://hwiruruk.github.io/favoread/';
 
-    const title    = name ? `${name} 읽은 책 추천 | 최애의 독서` : defaultTitle;
+    const title    = name ? `${name} 읽은 책 인생책 추천 | 최애의 독서` : defaultTitle;
     const desc     = name ? `${name}이(가) 읽은 책과 추천 도서 리스트. 최애의 독서에서 모아볼 수 있습니다.` : defaultDesc;
     const canonical = name ? `${BASE}?celeb=${encodeURIComponent(name)}` : BASE;
 
@@ -439,6 +439,31 @@
     // canonical ← 셀럽 페이지가 독립적으로 색인되는 핵심
     document.querySelector('link[rel="canonical"]')
       ?.setAttribute('href', canonical);
+    
+    /* ── [추가된 코드] 동적 스키마(구조화 데이터) 생성 ── */
+    const existingScript = document.getElementById('dynamic-schema');
+    if (existingScript) existingScript.remove();
+
+    if (name && celebMap[name]) {
+      // 해당 연예인의 책 제목들을 배열로 추출 후 콤마로 연결
+      const books = celebMap[name].books.map(b => b.title).join(', ');
+
+      const schema = {
+        "@context": "https://schema.org",
+        "@type": "ProfilePage",
+        "mainEntity": {
+          "@type": "Person",
+          "name": name,
+          "description": `${name}이(가) 추천하거나 읽은 책 목록: ${books}`
+        }
+      };
+
+      const script = document.createElement('script');
+      script.id = 'dynamic-schema';
+      script.type = 'application/ld+json';
+      script.textContent = JSON.stringify(schema);
+      document.head.appendChild(script);
+    }
   }
 
   function setViewMode(mode) {
